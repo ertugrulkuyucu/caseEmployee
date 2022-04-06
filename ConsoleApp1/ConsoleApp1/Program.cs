@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,7 +45,7 @@ namespace ConsoleApp1
                 new Job("Kamyon sur", 2),
                 new Job("LHD sur", 3),
                 new Job("Tahkimat yap", 4),
-                new Job("Delik del", 5),
+                new Job("Patlatma Deliklerini hazırla", 5),
                 new Job("Patlayici yerlestir", 6)
             };
             
@@ -54,32 +54,40 @@ namespace ConsoleApp1
 
             for (int x = 0; x < 6; x++)
             {
-                List<string> schedule = new List<string>();
-                for (int i = 0; i < 6; i++)
-            {
-                schedule.Add(personalList[i].Name.ToString() + personalList[i].Surname.ToString());
-                basadon:
-                randomNumber = random.Next(0, 6);
-                if (i != 0)
-                {
-                    for (int a = 1; a < schedule.Count; a += 2)
+                    List<string> schedule = new List<string>();
+                    for (int i = 0; i < 6; i++)
                     {
-                        if (schedule[a].ToString() == jobList[randomNumber].JobName.ToString())
+                        schedule.Add(personalList[i].Name.ToString() + " " + personalList[i].Surname.ToString());
+                        point1:
+                        randomNumber = random.Next(0, 6);
+                        if (i != 0)
                         {
-                            goto basadon;
+                            for (int a = 1; a < schedule.Count; a += 2)
+                            {
+
+                                if (schedule[a].ToString() == jobList[randomNumber].JobName.ToString())
+                                {
+                                    goto point1;
+                                }
+                            }
+                            schedule.Add(jobList[randomNumber].JobName.ToString());
                         }
+                        else
+                            schedule.Add(jobList[randomNumber].JobName.ToString());
                     }
-                    schedule.Add(jobList[randomNumber].JobName.ToString());
-                }
-                else
-                    schedule.Add(jobList[randomNumber].JobName.ToString());
-            }
-            allSchedules.Add(schedule);
+                allSchedules.Add(schedule);
+
             }
 
-            foreach (var item in allSchedules)
+
+            for (int x = 0; x < allSchedules.Count; x++)
             {
-                Console.WriteLine(item);
+                Console.WriteLine($"--Day {x+1}--");
+                foreach (var item in allSchedules[x])
+                {
+                    Console.WriteLine(item);
+                }
+                
             }
             Console.ReadLine();
         }
