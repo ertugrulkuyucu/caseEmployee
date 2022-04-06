@@ -55,15 +55,25 @@ namespace ConsoleApp1
             for (int x = 0; x < 6; x++)
             {
                     List<string> schedule = new List<string>();
+
                     for (int i = 0; i < 6; i++)
                     {
                         schedule.Add(personalList[i].Name.ToString() + " " + personalList[i].Surname.ToString());
                         point1:
                         randomNumber = random.Next(0, 6);
-                        if (i != 0)
+                        if (i != 0 && x == 0)
                         {
                             for (int a = 1; a < schedule.Count; a += 2)
                             {
+                            List<string> tempList = new List<string>();
+                                if (x != 0)
+                                { 
+                                    tempList = allSchedules[x - 1];
+                                    if (tempList[a].ToString() == jobList[randomNumber].JobName.ToString())
+                                    {
+                                         goto point1;
+                                    }
+                                }
 
                                 if (schedule[a].ToString() == jobList[randomNumber].JobName.ToString())
                                 {
@@ -75,9 +85,15 @@ namespace ConsoleApp1
                         else
                             schedule.Add(jobList[randomNumber].JobName.ToString());
                     }
+
+
                 allSchedules.Add(schedule);
 
+
             }
+
+
+
 
 
             for (int x = 0; x < allSchedules.Count; x++)
@@ -86,8 +102,7 @@ namespace ConsoleApp1
                 foreach (var item in allSchedules[x])
                 {
                     Console.WriteLine(item);
-                }
-                
+                }                
             }
             Console.ReadLine();
         }
