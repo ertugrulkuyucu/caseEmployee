@@ -10,23 +10,6 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            #region MyRegion
-            //Personal p1 = new Personal("Ertugrul","Kuyucu",1);
-            //Personal p2 = new Personal("Serkan","Diker",2);
-            //Personal p3 = new Personal("Emre","Sagir",3);
-            //Personal p4 = new Personal("Berke","Gul",4);
-            //Personal p5 = new Personal("Umut","Buyukyildiz",5);
-            //Personal p6 = new Personal("Ali","Aksoy",6);
-
-            //Job j1 = new Job("Catlak kontrolu yap",1);
-            //Job j2 = new Job("Kamyon sür",2);
-            //Job j3 = new Job("LHD sür",3);
-            //Job j4 = new Job("Tahkimat yap",4);
-            //Job j5 = new Job("Delik del", 5);
-            //Job j6 = new Job("Patlayıcı yerlesti", 6);
-
-            #endregion
-
             List<List<string>> allSchedules = new List<List<string>>();
 
             List<Personal> personalList = new List<Personal>()
@@ -48,61 +31,76 @@ namespace ConsoleApp1
                 new Job("Patlatma Deliklerini hazırla", 5),
                 new Job("Patlayici yerlestir", 6)
             };
-            
-            Random random = new Random ();
+
+            Random random = new Random();
             int randomNumber;
 
-            for (int x = 0; x < 6; x++)
+            //doList ile her bir isciye farklı is verilecek. yani ilerin unique sahipleri olacak.
+            List<string> doList()
             {
-                    List<string> schedule = new List<string>();
-
-                    for (int i = 0; i < 6; i++)
+                List<string> schedule = new List<string>();
+                //bu dongu ile iscilere sırayla gorev ataniyor(i personeli temsil ediyor)
+                for (int i = 0; i < 6; i++)
+                {
+                    schedule.Add(personalList[i].Name.ToString() + " " + personalList[i].Surname.ToString());
+                point1:
+                    randomNumber = random.Next(0, 6);
+                    //ilk kisiye is verilmis mi
+                    if (i != 0)
                     {
-                        schedule.Add(personalList[i].Name.ToString() + " " + personalList[i].Surname.ToString());
-                        point1:
-                        randomNumber = random.Next(0, 6);
-                        if (i != 0 && x == 0)
+                        //burada verilen random daha once bu listede kullanılmıs mı kontrolu yapiliyor
+                        for (int a = 1; a < schedule.Count; a += 2)
                         {
-                            for (int a = 1; a < schedule.Count; a += 2)
+
+                            if (schedule[a].ToString() == jobList[randomNumber].JobName.ToString())
                             {
-                            List<string> tempList = new List<string>();
-                                if (x != 0)
-                                { 
-                                    tempList = allSchedules[x - 1];
-                                    if (tempList[a].ToString() == jobList[randomNumber].JobName.ToString())
-                                    {
-                                         goto point1;
-                                    }
-                                }
-
-                                if (schedule[a].ToString() == jobList[randomNumber].JobName.ToString())
-                                {
-                                    goto point1;
-                                }
+                                goto point1;
                             }
-                            schedule.Add(jobList[randomNumber].JobName.ToString());
                         }
-                        else
-                            schedule.Add(jobList[randomNumber].JobName.ToString());
+                        schedule.Add(jobList[randomNumber].JobName.ToString());
                     }
-
-
-                allSchedules.Add(schedule);
-
-
+                    else
+                        schedule.Add(jobList[randomNumber].JobName.ToString());
+                }
+                return schedule;
             }
 
+            //bu dongu gorevlerin esit dagılması icin her gun farklı olması icin
+            for (int x = 0; x < 6; x++)
+            {
+                point2:
+                List<string> temp = new List<string>();
+                List<string> temp2 = new List<string>();
+                temp = doList();
 
+                if (x != 0)
+                {
+                    for (int q = 0; q < allSchedules.Count; q++)
+                    {
+                        temp2 = allSchedules[q];
 
-
+                        for (int i = 1; i < temp.Count; i += 2)
+                        {
+                            if (temp2[i] == temp[i])
+                            {
+                                goto point2;
+                            }
+                        }
+                    }
+                    
+                    allSchedules.Add(temp);                   
+                }
+                else
+                allSchedules.Add(doList());
+            }
 
             for (int x = 0; x < allSchedules.Count; x++)
             {
-                Console.WriteLine($"--Day {x+1}--");
+                Console.WriteLine($"--Day {x + 1}--");
                 foreach (var item in allSchedules[x])
                 {
                     Console.WriteLine(item);
-                }                
+                }
             }
             Console.ReadLine();
         }
